@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemi Macerası</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Fredoka', sans-serif;
+            background: #87CEEB;
+            user-select: none;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .score-board {
+            background: #FFCF71;
+            border: 4px solid #FFF;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 32px;
+            color: #5D4037;
+            font-weight: 700;
+            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mute-btn {
+            pointer-events: auto;
+            background: #FFF;
+            border: 4px solid #E0E0E0;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.1);
+            transition: transform 0.1s;
+        }
+
+        .mute-btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        /* Start Screen */
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(135, 206, 235, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            pointer-events: auto;
+        }
+
+        .title {
+            font-size: 60px;
+            color: #FFF;
+            text-shadow: 0 4px 0 #0066cc;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .controls-visual {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 30px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .key-icon {
+            background: white;
+            border: 3px solid #DDD;
+            border-radius: 12px;
+            padding: 10px;
+            font-size: 32px;
+            box-shadow: 0 4px 0 #CCC;
+            color: #0066cc;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .key-space {
+            min-width: 120px;
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-label {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        #play-btn {
+            background: #00D1C7;
+            color: white;
+            border: 6px solid white;
+            padding: 20px 60px;
+            font-size: 40px;
+            border-radius: 99px;
+            font-family: inherit;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 10px 0 #00B3A6;
+            transition: transform 0.1s;
+            animation: pulse 2s infinite;
+        }
+
+        #play-btn:hover {
+            transform: scale(1.05);
+        }
+
+        #play-btn:active {
+            transform: translateY(6px) scale(1);
+            box-shadow: 0 4px 0 #00B3A6;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* In-Game Controls Hint (Bottom Left) */
+        .ingame-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 20px;
+            display: none;
+            /* Hidden initially */
+            gap: 15px;
+            border: 3px solid white;
+        }
+
+        .mini-key {
+            font-size: 20px;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 8px;
+            border: 2px solid #DDD;
+        }
+
+        /* Game Over Screen */
+        #game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 40px;
+            text-align: center;
+            border: 8px solid #FF7EB3;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            display: none;
+            pointer-events: auto;
+            z-index: 30;
+        }
+
+        #game-over h1 {
+            color: #FF7EB3;
+            font-size: 48px;
+            margin: 0 0 20px;
+        }
+
+        #restart-btn {
+            background: #6C5DD3;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 24px;
+            border-radius: 99px;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #5648A5;
+        }
+
+        #restart-btn:active {
+            transform: translateY(6px);
+            box-shadow: none;
+        }
+    </style>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+    <div id="ui-layer">
+        <div class="top-bar">
+            <div class="score-board">
+                <span>⭐</span> <span id="score">0</span>
+            </div>
+            <button class="mute-btn" id="mute-btn" title="Sesi Aç/Kapat">🔊</button>
+        </div>
+
+        <div class="ingame-controls" id="ingame-controls">
+            <div class="mini-key">⬆️⬇️⬅️➡️ Yön</div>
+        </div>
+    </div>
+
+    <div id="start-screen">
+        <h1 class="title">Gemi Macerası 🚢</h1>
+
+        <div class="controls-visual">
+            <div class="control-group">
+                <div class="key-icon">⬆️</div>
+                <div style="display:flex; gap:5px;">
+                    <div class="key-icon">⬅️</div>
+                    <div class="key-icon">⬇️</div>
+                    <div class="key-icon">➡️</div>
+                </div>
+                <div class="control-label">Yön Ver</div>
+            </div>
+        </div>
+
+        <button id="play-btn">OYNA ▶</button>
+    </div>
+
+    <div id="game-over">
+        <h1>Oyun Bitti!</h1>
+        <p style="font-size: 24px; color: #7A7E99; margin-bottom: 30px;">Skorun: <span id="final-score">0</span></p>
+        <button id="restart-btn">Tekrar Oyna 🔁</button>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+        // --- Sound Manager (Web Audio API) ---
+        class SoundManager {
+            constructor() {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                this.isMuted = false;
+            }
+
+            playCollect() {
+                if (this.isMuted) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, this.ctx.currentTime); // A5
+                osc.frequency.exponentialRampToValueAtTime(1760, this.ctx.currentTime + 0.1); // A6
+
+                gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.3);
+            }
+
+            toggleMute() {
+                this.isMuted = !this.isMuted;
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+                return this.isMuted;
+            }
+        }
+
+        // --- Game Variables ---
+        let scene, camera, renderer;
+        let ship;
+        let coins = [];
+        let rocks = [];
+        let score = 0;
+        let isPlaying = false;
+        let isGameOver = false;
+        const soundManager = new SoundManager();
+
+        // Physics
+        const speed = 0.15;
+        let shipVelocity = new THREE.Vector3(0, 0, 0);
+
+        // Input
+        const keys = {
+            ArrowUp: false,
+            ArrowDown: false,
+            ArrowLeft: false,
+            ArrowRight: false
+        };
+
+        // UI Elements
+        const scoreEl = document.getElementById('score');
+        const gameOverEl = document.getElementById('game-over');
+        const finalScoreEl = document.getElementById('final-score');
+        const restartBtn = document.getElementById('restart-btn');
+        const playBtn = document.getElementById('play-btn');
+        const startScreen = document.getElementById('start-screen');
+        const muteBtn = document.getElementById('mute-btn');
+        const ingameControls = document.getElementById('ingame-controls');
+
+        init();
+        animate();
+
+        function init() {
+            // 1. Scene Setup
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x87CEEB);
+            scene.fog = new THREE.Fog(0x87CEEB, 10, 80);
+
+            // 2. Camera
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 10, 15);
+            camera.lookAt(0, 0, 0);
+
+            // 3. Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            document.body.appendChild(renderer.domElement);
+
+            // 4. Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight.position.set(10, 20, 10);
+            dirLight.castShadow = true;
+            scene.add(dirLight);
+
+            // 5. Objects
+            createWater();
+            loadShip();
+
+            // Initial Spawns
+            for (let i = 0; i < 10; i++) spawnCoin();
+            for (let i = 0; i < 5; i++) spawnRock();
+
+            // 6. Events
+            window.addEventListener('resize', onWindowResize);
+            window.addEventListener('keydown', (e) => handleKey(e, true));
+            window.addEventListener('keyup', (e) => handleKey(e, false));
+
+            playBtn.addEventListener('click', startGame);
+            restartBtn.addEventListener('click', resetGame);
+            muteBtn.addEventListener('click', () => {
+                const muted = soundManager.toggleMute();
+                muteBtn.textContent = muted ? '🔇' : '🔊';
+            });
+        }
+
+        function startGame() {
+            isPlaying = true;
+            startScreen.style.display = 'none';
+            ingameControls.style.display = 'flex';
+
+            if (soundManager.ctx.state === 'suspended') {
+                soundManager.ctx.resume();
+            }
+        }
+
+        function createWater() {
+            const geometry = new THREE.PlaneGeometry(500, 500);
+            const material = new THREE.MeshStandardMaterial({
+                color: 0x0077be,
+                roughness: 0.1,
+                metalness: 0.1
+            });
+            const water = new THREE.Mesh(geometry, material);
+            water.rotation.x = -Math.PI / 2;
+            water.position.y = -0.5; // Slightly below 0
+            water.receiveShadow = true;
+            scene.add(water);
+        }
+
+        function loadShip() {
+            const loader = new GLTFLoader();
+            loader.load(
+                'https://raw.githubusercontent.com/erhan3861/Seaside-Python-Shooter/main/ship.glb',
+                (gltf) => {
+                    ship = gltf.scene;
+                    ship.scale.set(0.5, 0.5, 0.5); // Adjust scale if needed
+                    ship.rotation.y = -Math.PI / 2; // Fix orientation: Face forward
+                    ship.position.set(0, 0, 0);
+                    ship.traverse((child) => {
+                        if (child.isMesh) {
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                        }
+                    });
+                    scene.add(ship);
+                },
+                undefined,
+                (error) => {
+                    console.error('An error occurred loading the ship:', error);
+                    // Fallback to a simple box if model fails
+                    const geometry = new THREE.BoxGeometry(2, 1, 4);
+                    const material = new THREE.MeshStandardMaterial({ color: 'red' });
+                    ship = new THREE.Mesh(geometry, material);
+                    scene.add(ship);
+                }
+            );
+        }
+
+        function spawnCoin() {
+            const geo = new THREE.TorusGeometry(0.5, 0.15, 8, 16);
+            const mat = new THREE.MeshStandardMaterial({
+                color: 0xFFD700,
+                metalness: 0.8,
+                roughness: 0.2
+            });
+            const coin = new THREE.Mesh(geo, mat);
+
+            const x = (Math.random() - 0.5) * 60;
+            const z = (ship ? ship.position.z : 0) - 30 - (Math.random() * 40);
+
+            coin.position.set(x, 0.5, z);
+            scene.add(coin);
+            coins.push(coin);
+        }
+
+        function spawnRock() {
+            const geo = new THREE.DodecahedronGeometry(1.5, 0);
+            const mat = new THREE.MeshStandardMaterial({
+                color: 0x555555,
+                roughness: 0.9
+            });
+            const rock = new THREE.Mesh(geo, mat);
+
+            const x = (Math.random() - 0.5) * 60;
+            const z = (ship ? ship.position.z : 0) - 40 - (Math.random() * 50);
+
+            rock.position.set(x, 0.5, z);
+            scene.add(rock);
+            rocks.push(rock);
+        }
+
+        function handleKey(e, isDown) {
+            if (e.code === 'ArrowUp') keys.ArrowUp = isDown;
+            if (e.code === 'ArrowDown') keys.ArrowDown = isDown;
+            if (e.code === 'ArrowLeft') keys.ArrowLeft = isDown;
+            if (e.code === 'ArrowRight') keys.ArrowRight = isDown;
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function resetGame() {
+            isGameOver = false;
+            isPlaying = true;
+            score = 0;
+            scoreEl.textContent = score;
+            gameOverEl.style.display = 'none';
+
+            if (ship) {
+                ship.position.set(0, 0, 0);
+                ship.rotation.set(0, 0, 0);
+            }
+            ship.rotation.y = -Math.PI / 2; // Fix orientation: Face forward
+            coins.forEach(c => scene.remove(c));
+            coins = [];
+            rocks.forEach(r => scene.remove(r));
+            rocks = [];
+
+            for (let i = 0; i < 10; i++) spawnCoin();
+            for (let i = 0; i < 5; i++) spawnRock();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (!isPlaying || isGameOver) {
+                // Gentle floating animation when paused/game over
+                if (ship) {
+                    ship.position.y = Math.sin(Date.now() * 0.002) * 0.2;
+                }
+                return;
+            }
+
+            if (ship) {
+                // Movement
+                if (keys.ArrowLeft) ship.position.x -= speed;
+                if (keys.ArrowRight) ship.position.x += speed;
+                if (keys.ArrowUp) ship.position.z -= speed;
+                if (keys.ArrowDown) ship.position.z += speed;
+
+                // Buoyancy
+                ship.position.y = Math.sin(Date.now() * 0.005) * 0.2;
+
+                // Rotation (Tilting)
+                const targetRotZ = keys.ArrowLeft ? 0.2 : (keys.ArrowRight ? -0.2 : 0);
+                const targetRotX = keys.ArrowUp ? -0.1 : (keys.ArrowDown ? 0.1 : 0); // Pitch
+
+                // ship.rotation.z += (targetRotZ + ship.rotation.z) * 0.1;
+                // ship.rotation.x += (targetRotX + ship.rotation.x) * 0.1;
+
+                // Camera Follow
+                camera.position.x += (ship.position.x - camera.position.x) * 0.1;
+                camera.position.z = ship.position.z + 15;
+                camera.lookAt(ship.position.x, 0, ship.position.z);
+            }
+
+            // Coins
+            for (let i = coins.length - 1; i >= 0; i--) {
+                const coin = coins[i];
+                coin.rotation.y += 0.02;
+
+                if (ship && ship.position.distanceTo(coin.position) < 2) {
+                    scene.remove(coin);
+                    coins.splice(i, 1);
+                    score++;
+                    scoreEl.textContent = score;
+                    soundManager.playCollect();
+                    spawnCoin();
+                }
+
+                // Respawn if too far behind
+                if (ship && coin.position.z > ship.position.z + 10) {
+                    scene.remove(coin);
+                    coins.splice(i, 1);
+                    spawnCoin();
+                }
+            }
+            if (coins.length < 10) spawnCoin();
+
+            // Rocks (Obstacles)
+            for (let i = rocks.length - 1; i >= 0; i--) {
+                const rock = rocks[i];
+
+                if (ship && ship.position.distanceTo(rock.position) < 2) {
+                    gameOver();
+                }
+
+                if (ship && rock.position.z > ship.position.z + 10) {
+                    scene.remove(rock);
+                    rocks.splice(i, 1);
+                    spawnRock();
+                }
+            }
+            if (rocks.length < 5) spawnRock();
+
+            renderer.render(scene, camera);
+        }
+
+        function gameOver() {
+            isGameOver = true;
+            finalScoreEl.textContent = score;
+            gameOverEl.style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>
