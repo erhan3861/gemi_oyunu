@@ -3,17 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Gemi Macerası</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap');
+
         body {
             margin: 0;
             overflow: hidden;
             font-family: 'Fredoka', sans-serif;
-            background: #87CEEB;
+            background: linear-gradient(135deg, #87CEEB, #4FC3F7);
             user-select: none;
         }
 
@@ -41,17 +40,17 @@
         }
 
         .score-board {
-            background: #FFCF71;
-            border: 4px solid #FFF;
-            padding: 10px 25px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 4px solid #FFB74D;
+            padding: 10px 30px;
             border-radius: 50px;
             font-size: 32px;
-            color: #5D4037;
+            color: #E65100;
             font-weight: 700;
             box-shadow: 0 6px 0 rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
 
         .mute-btn {
@@ -82,7 +81,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(135, 206, 235, 0.9);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -92,20 +92,22 @@
         }
 
         .title {
-            font-size: 60px;
-            color: #FFF;
-            text-shadow: 0 4px 0 #0066cc;
-            margin-bottom: 40px;
+            font-size: 80px;
+            color: #FFD54F;
+            text-shadow: 4px 4px 0 #FF6F00, 8px 8px 0 rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
             text-align: center;
+            -webkit-text-stroke: 3px #E65100;
         }
 
         .controls-visual {
             display: flex;
             gap: 40px;
             margin-bottom: 50px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.9);
             padding: 30px;
             border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
         .control-group {
@@ -122,40 +124,31 @@
             padding: 10px;
             font-size: 32px;
             box-shadow: 0 4px 0 #CCC;
-            color: #0066cc;
+            color: #0277BD;
             min-width: 50px;
             text-align: center;
         }
 
-        .key-space {
-            min-width: 120px;
-            font-size: 20px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
         .control-label {
-            color: white;
-            font-size: 20px;
+            color: #0277BD;
+            font-size: 24px;
             font-weight: bold;
-            text-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
         }
 
         #play-btn {
-            background: #00D1C7;
+            background: #00E676;
             color: white;
-            border: 6px solid white;
-            padding: 20px 60px;
+            border: none;
+            padding: 20px 80px;
             font-size: 40px;
             border-radius: 99px;
             font-family: inherit;
             font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 10px 0 #00B3A6;
+            box-shadow: 0 10px 0 #00C853;
             transition: transform 0.1s;
             animation: pulse 2s infinite;
+            text-transform: uppercase;
         }
 
         #play-btn:hover {
@@ -164,7 +157,7 @@
 
         #play-btn:active {
             transform: translateY(6px) scale(1);
-            box-shadow: 0 4px 0 #00B3A6;
+            box-shadow: 0 4px 0 #00C853;
         }
 
         @keyframes pulse {
@@ -186,13 +179,13 @@
             position: absolute;
             bottom: 20px;
             left: 20px;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.9);
             padding: 15px;
             border-radius: 20px;
             display: none;
-            /* Hidden initially */
             gap: 15px;
-            border: 3px solid white;
+            border: 3px solid #0277BD;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .mini-key {
@@ -201,6 +194,8 @@
             padding: 5px 10px;
             border-radius: 8px;
             border: 2px solid #DDD;
+            color: #0277BD;
+            font-weight: bold;
         }
 
         /* Game Over Screen */
@@ -210,37 +205,39 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: white;
-            padding: 40px;
+            padding: 50px;
             border-radius: 40px;
             text-align: center;
-            border: 8px solid #FF7EB3;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            border: 8px solid #FF5252;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
             display: none;
             pointer-events: auto;
             z-index: 30;
         }
 
         #game-over h1 {
-            color: #FF7EB3;
-            font-size: 48px;
+            color: #FF5252;
+            font-size: 60px;
             margin: 0 0 20px;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
         }
 
         #restart-btn {
-            background: #6C5DD3;
+            background: #2979FF;
             color: white;
             border: none;
-            padding: 15px 40px;
-            font-size: 24px;
+            padding: 20px 60px;
+            font-size: 30px;
             border-radius: 99px;
             font-family: inherit;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 6px 0 #5648A5;
+            box-shadow: 0 8px 0 #1565C0;
+            transition: transform 0.1s;
         }
 
         #restart-btn:active {
-            transform: translateY(6px);
+            transform: translateY(8px);
             box-shadow: none;
         }
     </style>
@@ -289,13 +286,12 @@
 
     <div id="game-over">
         <h1>Oyun Bitti!</h1>
-        <p style="font-size: 24px; color: #7A7E99; margin-bottom: 30px;">Skorun: <span id="final-score">0</span></p>
+        <p style="font-size: 30px; color: #546E7A; margin-bottom: 30px;">Skorun: <span id="final-score">0</span></p>
         <button id="restart-btn">Tekrar Oyna 🔁</button>
     </div>
 
     <script type="module">
         import * as THREE from 'three';
-        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
         // --- Sound Manager (Web Audio API) ---
         class SoundManager {
@@ -323,6 +319,25 @@
                 osc.stop(this.ctx.currentTime + 0.3);
             }
 
+            playCrash() {
+                if (this.isMuted) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(100, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(10, this.ctx.currentTime + 0.3);
+
+                gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.3);
+            }
+
             toggleMute() {
                 this.isMuted = !this.isMuted;
                 if (this.ctx.state === 'suspended') this.ctx.resume();
@@ -335,13 +350,15 @@
         let ship;
         let coins = [];
         let rocks = [];
+        let particles = [];
         let score = 0;
         let isPlaying = false;
         let isGameOver = false;
         const soundManager = new SoundManager();
+        let waterMesh;
 
         // Physics
-        const speed = 0.15;
+        const speed = 0.25;
         let shipVelocity = new THREE.Vector3(0, 0, 0);
 
         // Input
@@ -369,15 +386,15 @@
             // 1. Scene Setup
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x87CEEB);
-            scene.fog = new THREE.Fog(0x87CEEB, 10, 80);
+            scene.fog = new THREE.Fog(0x87CEEB, 20, 100);
 
             // 2. Camera
             camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 10, 15);
+            camera.position.set(0, 12, 18);
             camera.lookAt(0, 0, 0);
 
             // 3. Renderer
-            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.shadowMap.enabled = true;
             document.body.appendChild(renderer.domElement);
@@ -389,11 +406,12 @@
             const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
             dirLight.position.set(10, 20, 10);
             dirLight.castShadow = true;
+            dirLight.shadow.mapSize.set(2048, 2048);
             scene.add(dirLight);
 
             // 5. Objects
             createWater();
-            loadShip();
+            createShip();
 
             // Initial Spawns
             for (let i = 0; i < 10; i++) spawnCoin();
@@ -423,46 +441,63 @@
         }
 
         function createWater() {
-            const geometry = new THREE.PlaneGeometry(500, 500);
+            const geometry = new THREE.PlaneGeometry(500, 500, 50, 50);
             const material = new THREE.MeshStandardMaterial({
-                color: 0x0077be,
+                color: 0x00BFFF,
                 roughness: 0.1,
-                metalness: 0.1
+                metalness: 0.1,
+                flatShading: true
             });
-            const water = new THREE.Mesh(geometry, material);
-            water.rotation.x = -Math.PI / 2;
-            water.position.y = -0.5; // Slightly below 0
-            water.receiveShadow = true;
-            scene.add(water);
+            waterMesh = new THREE.Mesh(geometry, material);
+            waterMesh.rotation.x = -Math.PI / 2;
+            waterMesh.position.y = -0.5;
+            waterMesh.receiveShadow = true;
+            scene.add(waterMesh);
         }
 
-        function loadShip() {
-            const loader = new GLTFLoader();
-            loader.load(
-                'https://raw.githubusercontent.com/erhan3861/Seaside-Python-Shooter/main/ship.glb',
-                (gltf) => {
-                    ship = gltf.scene;
-                    ship.scale.set(0.5, 0.5, 0.5); // Adjust scale if needed
-                    ship.rotation.y = -Math.PI / 2; // Fix orientation: Face forward
-                    ship.position.set(0, 0, 0);
-                    ship.traverse((child) => {
-                        if (child.isMesh) {
-                            child.castShadow = true;
-                            child.receiveShadow = true;
-                        }
-                    });
-                    scene.add(ship);
-                },
-                undefined,
-                (error) => {
-                    console.error('An error occurred loading the ship:', error);
-                    // Fallback to a simple box if model fails
-                    const geometry = new THREE.BoxGeometry(2, 1, 4);
-                    const material = new THREE.MeshStandardMaterial({ color: 'red' });
-                    ship = new THREE.Mesh(geometry, material);
-                    scene.add(ship);
+        function createShip() {
+            ship = new THREE.Group();
+
+            // Hull
+            const hullGeo = new THREE.BoxGeometry(2, 1, 4);
+            // Taper the front
+            const pos = hullGeo.attributes.position;
+            for (let i = 0; i < pos.count; i++) {
+                if (pos.getZ(i) < -1.5) {
+                    pos.setX(i, pos.getX(i) * 0.1);
                 }
-            );
+            }
+            hullGeo.computeVertexNormals();
+
+            const hullMat = new THREE.MeshStandardMaterial({ color: 0xFFFFFF }); // White hull
+            const hull = new THREE.Mesh(hullGeo, hullMat);
+            hull.position.y = 0.5;
+            hull.castShadow = true;
+            ship.add(hull);
+
+            // Stripe
+            const stripeGeo = new THREE.BoxGeometry(2.1, 0.2, 3.8);
+            const stripeMat = new THREE.MeshStandardMaterial({ color: 0xFF0000 });
+            const stripe = new THREE.Mesh(stripeGeo, stripeMat);
+            stripe.position.y = 0.8;
+            ship.add(stripe);
+
+            // Cabin
+            const cabinGeo = new THREE.BoxGeometry(1.4, 1, 1.5);
+            const cabinMat = new THREE.MeshStandardMaterial({ color: 0x333333 });
+            const cabin = new THREE.Mesh(cabinGeo, cabinMat);
+            cabin.position.set(0, 1.5, 0.5);
+            cabin.castShadow = true;
+            ship.add(cabin);
+
+            // Chimney
+            const chimGeo = new THREE.CylinderGeometry(0.3, 0.3, 1);
+            const chimMat = new THREE.MeshStandardMaterial({ color: 0xFFD700 });
+            const chim = new THREE.Mesh(chimGeo, chimMat);
+            chim.position.set(0, 2.2, 0.5);
+            ship.add(chim);
+
+            scene.add(ship);
         }
 
         function spawnCoin() {
@@ -477,7 +512,7 @@
             const x = (Math.random() - 0.5) * 60;
             const z = (ship ? ship.position.z : 0) - 30 - (Math.random() * 40);
 
-            coin.position.set(x, 0.5, z);
+            coin.position.set(x, 1, z);
             scene.add(coin);
             coins.push(coin);
         }
@@ -496,6 +531,22 @@
             rock.position.set(x, 0.5, z);
             scene.add(rock);
             rocks.push(rock);
+        }
+
+        function createParticles(pos) {
+            for (let i = 0; i < 10; i++) {
+                const geo = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+                const mat = new THREE.MeshBasicMaterial({ color: 0xFFD700 });
+                const p = new THREE.Mesh(geo, mat);
+                p.position.copy(pos);
+                p.vel = new THREE.Vector3(
+                    (Math.random() - 0.5) * 0.5,
+                    (Math.random()) * 0.5,
+                    (Math.random() - 0.5) * 0.5
+                );
+                scene.add(p);
+                particles.push(p);
+            }
         }
 
         function handleKey(e, isDown) {
@@ -522,7 +573,7 @@
                 ship.position.set(0, 0, 0);
                 ship.rotation.set(0, 0, 0);
             }
-            ship.rotation.y = -Math.PI / 2; // Fix orientation: Face forward
+
             coins.forEach(c => scene.remove(c));
             coins = [];
             rocks.forEach(r => scene.remove(r));
@@ -535,8 +586,32 @@
         function animate() {
             requestAnimationFrame(animate);
 
+            // Water Animation
+            if (waterMesh) {
+                const pos = waterMesh.geometry.attributes.position;
+                for (let i = 0; i < pos.count; i++) {
+                    const x = pos.getX(i);
+                    const y = pos.getY(i); // Actually Z in world space due to rotation
+                    // Simple wave
+                    const z = Math.sin(x * 0.2 + Date.now() * 0.002) * 0.5 + Math.cos(y * 0.2 + Date.now() * 0.002) * 0.5;
+                    pos.setZ(i, z);
+                }
+                pos.needsUpdate = true;
+            }
+
+            // Particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.position.add(p.vel);
+                p.vel.y -= 0.02; // Gravity
+                p.scale.multiplyScalar(0.9);
+                if (p.scale.x < 0.01) {
+                    scene.remove(p);
+                    particles.splice(i, 1);
+                }
+            }
+
             if (!isPlaying || isGameOver) {
-                // Gentle floating animation when paused/game over
                 if (ship) {
                     ship.position.y = Math.sin(Date.now() * 0.002) * 0.2;
                 }
@@ -557,8 +632,8 @@
                 const targetRotZ = keys.ArrowLeft ? 0.2 : (keys.ArrowRight ? -0.2 : 0);
                 const targetRotX = keys.ArrowUp ? -0.1 : (keys.ArrowDown ? 0.1 : 0); // Pitch
 
-                // ship.rotation.z += (targetRotZ + ship.rotation.z) * 0.1;
-                // ship.rotation.x += (targetRotX + ship.rotation.x) * 0.1;
+                ship.rotation.z += (targetRotZ - ship.rotation.z) * 0.1;
+                ship.rotation.x += (targetRotX - ship.rotation.x) * 0.1;
 
                 // Camera Follow
                 camera.position.x += (ship.position.x - camera.position.x) * 0.1;
@@ -571,7 +646,8 @@
                 const coin = coins[i];
                 coin.rotation.y += 0.02;
 
-                if (ship && ship.position.distanceTo(coin.position) < 2) {
+                if (ship && ship.position.distanceTo(coin.position) < 2.5) {
+                    createParticles(coin.position);
                     scene.remove(coin);
                     coins.splice(i, 1);
                     score++;
@@ -593,7 +669,8 @@
             for (let i = rocks.length - 1; i >= 0; i--) {
                 const rock = rocks[i];
 
-                if (ship && ship.position.distanceTo(rock.position) < 2) {
+                if (ship && ship.position.distanceTo(rock.position) < 2.5) {
+                    soundManager.playCrash();
                     gameOver();
                 }
 
@@ -606,12 +683,6 @@
             if (rocks.length < 5) spawnRock();
 
             renderer.render(scene, camera);
-        }
-
-        function gameOver() {
-            isGameOver = true;
-            finalScoreEl.textContent = score;
-            gameOverEl.style.display = 'block';
         }
     </script>
 </body>
